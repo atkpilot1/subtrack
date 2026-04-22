@@ -301,6 +301,38 @@
 <script>
   const BAR_COLORS = ['#ff6b6b','#4d96ff','#6bcb77','#ffd93d','#c77dff','#ff9f43','#4ecdc4','#ff6eb4'];
   const BG_COLORS = ['#fff5f5','#eff6ff','#f0fdf4','#fefce8','#faf5ff','#fff7ed','#f0fdfa','#fdf2f8'];
+  const CANCEL_URLS = {
+    'netflix': 'https://www.netflix.com/cancelplan',
+    'spotify': 'https://www.spotify.com/account/subscription/cancel',
+    'hulu': 'https://secure.hulu.com/account/cancel',
+    'disney+': 'https://www.disneyplus.com/account/subscription',
+    'apple tv+': 'https://support.apple.com/en-us/HT202039',
+    'amazon prime': 'https://www.amazon.com/gp/primecentral',
+    'youtube premium': 'https://myaccount.google.com/payments-and-subscriptions',
+    'hbo max': 'https://www.max.com/settings/subscription',
+    'icloud': 'https://support.apple.com/en-us/HT207629',
+    'chatgpt plus': 'https://chat.openai.com/#settings/subscription',
+    'claude pro': 'https://claude.ai/settings/billing',
+    'google one': 'https://one.google.com/storage',
+    'dropbox': 'https://www.dropbox.com/account/plan',
+    'microsoft 365': 'https://account.microsoft.com/services',
+    'peacock': 'https://www.peacocktv.com/account/subscription',
+    'paramount+': 'https://www.paramountplus.com/account/subscription',
+    'apple music': 'https://support.apple.com/en-us/HT202039',
+    'tidal': 'https://account.tidal.com/subscription',
+    'notion': 'https://www.notion.so/profile/settings',
+    'canva pro': 'https://www.canva.com/settings/subscriptions',
+    'grammarly': 'https://account.grammarly.com/subscription',
+    'adobe creative cloud': 'https://account.adobe.com/plans',
+    'new york times': 'https://myaccount.nytimes.com/seg/subscription',
+    'wall street journal': 'https://customercenter.wsj.com',
+    'peloton': 'https://www.onepeloton.com/profile/subscriptions',
+    'apple fitness+': 'https://support.apple.com/en-us/HT202039',
+    'zwift': 'https://www.zwift.com/profile/subscription',
+  };
+  function getCancelUrl(name) {
+    return CANCEL_URLS[name.toLowerCase()] || null;
+  }
   let subs = JSON.parse(localStorage.getItem('subsnap-subs') || '[]');
   let sortMode = 'date';
   function save() { localStorage.setItem('subsnap-subs', JSON.stringify(subs)); }
@@ -355,11 +387,12 @@
         const rl = renewalLabel(sub.renewal);
         const cl = sub.cycle==='yearly'?'/yr':sub.cycle==='weekly'?'/wk':'/mo';
         const idx = subs.findIndex(s=>s.id===sub.id);
+        const cancelUrl = getCancelUrl(sub.name);
         return `<div class="sub-item">
           <div class="sub-emoji" style="background:${BG_COLORS[idx%BG_COLORS.length]}">${sub.emoji}</div>
           <div class="sub-info">
             <div class="sub-name">${sub.name}</div>
-            <div class="sub-meta">${sub.cycle.charAt(0).toUpperCase()+sub.cycle.slice(1)}</div>
+            <div class="sub-meta">${sub.cycle.charAt(0).toUpperCase()+sub.cycle.slice(1)}${cancelUrl ? ` · <a href="${cancelUrl}" target="_blank" rel="noopener" style="color:var(--red);font-size:11px;font-weight:700;text-decoration:none;">Cancel ↗</a>` : ''}</div>
             ${rl.text?`<div class="sub-renewal ${rl.cls}">${rl.text}</div>`:''}
           </div>
           <div class="sub-price">
