@@ -1,4 +1,4 @@
-const CACHE = 'splittip-v1';
+const CACHE = 'subtrack-v1';
 const ASSETS = [
   '/',
   '/index.html',

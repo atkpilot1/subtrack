@@ -1,11 +1,11 @@
 {
-  "name": "SplitTip — Tip Calculator",
-  "short_name": "SplitTip",
-  "description": "Free tip calculator and bill splitter",
+  "name": "SubTrack — Subscription Tracker",
+  "short_name": "SubTrack",
+  "description": "Track all your subscriptions and never get surprised by a bill again",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f5f2ed",
-  "theme_color": "#c85a2a",
+  "background_color": "#0d0d1a",
+  "theme_color": "#0d0d1a",
   "orientation": "portrait",
   "icons": [
     {

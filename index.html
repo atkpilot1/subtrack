@@ -3,675 +3,591 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Tip Calculator — splittip.app</title>
-<meta name="description" content="Free tip calculator and bill splitter. Instantly calculate tip amounts and split the check between friends." />
-<meta name="theme-color" content="#c85a2a" />
+<title>SubTrack — Subscription Tracker</title>
+<meta name="description" content="Track all your subscriptions, see your monthly and yearly costs, and never get surprised by a bill again." />
+<meta name="theme-color" content="#0d0d1a" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="apple-mobile-web-app-title" content="SplitTip" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="SubTrack" />
 <meta name="mobile-web-app-capable" content="yes" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5568504521933562" crossorigin="anonymous"></script>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="SubTrack" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f2ed;
-    --surface: #ffffff;
-    --surface2: #f0ece5;
-    --border: #e0d9d0;
-    --text: #1a1714;
-    --text2: #6b6560;
-    --text3: #9e9890;
-    --accent: #c85a2a;
-    --accent-light: #f5e8e1;
-    --accent-dark: #a34620;
-    --green: #2a7a4b;
-    --green-light: #e1f0e8;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-  }
-  [data-theme="dark"] {
-    --bg: #111010;
-    --surface: #1c1b1a;
-    --surface2: #242322;
-    --border: #2e2c2a;
-    --text: #f0ece6;
-    --text2: #8a857e;
-    --text3: #5a5550;
-    --accent: #e07040;
-    --accent-light: #2a1e17;
-    --accent-dark: #f08050;
-    --green: #4aaa70;
-    --green-light: #162a1f;
-    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+    --bg: #0d0d1a;
+    --surface: #13131f;
+    --surface2: #1a1a2e;
+    --surface3: #20203a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0eeff;
+    --text2: #9993bb;
+    --text3: #5a5478;
+    --accent: #7c6fff;
+    --accent2: #a594ff;
+    --accent-bg: rgba(124,111,255,0.12);
+    --red: #ff6b6b;
+    --red-bg: rgba(255,107,107,0.12);
+    --green: #4ecdc4;
+    --green-bg: rgba(78,205,196,0.12);
+    --yellow: #ffd93d;
+    --yellow-bg: rgba(255,217,61,0.1);
+    --radius: 14px;
+    --radius-sm: 9px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Syne', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 1rem 4rem;
-    transition: background 0.25s, color 0.25s;
+    padding: 2rem 1rem 5rem;
   }
+
   header {
     width: 100%;
-    max-width: 520px;
+    max-width: 560px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2rem;
   }
-  .logo {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-  }
+  .logo { display: flex; align-items: baseline; gap: 8px; }
   .logo-mark {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Syne', sans-serif;
     font-size: 22px;
-    font-weight: 500;
-    color: var(--accent);
+    font-weight: 700;
+    color: var(--accent2);
     letter-spacing: -0.5px;
   }
-  .logo-sub {
-    font-size: 12px;
-    color: var(--text3);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .theme-btn {
-    width: 40px;
-    height: 24px;
-    border-radius: 12px;
-    background: var(--surface2);
+  .logo-sub { font-size: 11px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .container { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* Summary cards */
+  .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+  .summary-card {
+    background: var(--surface);
     border: 1px solid var(--border);
-    cursor: pointer;
-    position: relative;
-    transition: background 0.2s;
+    border-radius: var(--radius);
+    padding: 1rem;
   }
-  .theme-btn::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--text3);
-    transition: transform 0.2s, background 0.2s;
+  .summary-card.featured { border-color: var(--accent); background: var(--accent-bg); }
+  .summary-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+  .summary-card.featured .summary-label { color: var(--accent2); opacity: 0.8; }
+  .summary-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.5px;
   }
-  [data-theme="dark"] .theme-btn::after {
-    transform: translateX(16px);
-    background: var(--accent);
-  }
+  .summary-card.featured .summary-value { color: var(--accent2); }
+  .summary-sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
 
-  .container { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 12px; }
-
-  .card {
+  /* Add form */
+  .add-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1.25rem;
-    box-shadow: var(--shadow);
-    transition: background 0.25s, border-color 0.25s;
   }
-  .card-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+  .add-card-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text3);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
-
-  /* Bill input */
-  .bill-row {
+  .form-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .input-wrap {
     display: flex;
     align-items: center;
-    gap: 4px;
-  }
-  .bill-symbol {
-    font-family: 'DM Mono', monospace;
-    font-size: 32px;
-    font-weight: 300;
-    color: var(--text3);
-    line-height: 1;
-  }
-  #bill {
-    font-family: 'DM Mono', monospace;
-    font-size: 44px;
-    font-weight: 300;
-    color: var(--text);
-    background: transparent;
-    border: none;
-    outline: none;
-    width: 100%;
-    min-width: 0;
-    letter-spacing: -1px;
-  }
-  #bill::placeholder { color: var(--text3); }
-
-  /* Tip */
-  .tip-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  .tip-btn {
-    padding: 9px 4px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: transparent;
-    color: var(--text2);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .tip-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-  .tip-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .custom-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 0 12px;
     transition: border-color 0.15s;
   }
-  .custom-row:focus-within { border-color: var(--accent); }
-  .custom-row label { font-size: 12px; color: var(--text3); white-space: nowrap; }
-  #customTip {
-    flex: 1;
+  .input-wrap:focus-within { border-color: var(--accent); }
+  .input-wrap input, .input-wrap select {
     background: transparent;
     border: none;
     outline: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 15px;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
     color: var(--text);
     padding: 10px 0;
+    width: 100%;
     min-width: 0;
   }
-  .custom-row span { font-size: 14px; color: var(--text3); }
-
-  /* Split */
-  .split-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .split-ctrl {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-  }
-  .split-ctrl button {
-    width: 36px;
-    height: 36px;
-    background: transparent;
+  .input-wrap input::placeholder { color: var(--text3); }
+  .input-wrap select option { background: var(--surface2); color: var(--text); }
+  .input-prefix { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text3); margin-right: 4px; }
+  .add-btn {
+    padding: 10px 18px;
+    background: var(--accent);
+    color: #fff;
     border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: var(--text2);
-    transition: background 0.1s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .split-ctrl button:hover { background: var(--surface2); color: var(--accent); }
-  .split-ctrl button:disabled { color: var(--text3); cursor: default; }
-  .split-ctrl button:disabled:hover { background: transparent; color: var(--text3); }
-  .split-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 17px;
-    font-weight: 500;
-    min-width: 36px;
-    text-align: center;
-    color: var(--text);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    padding: 6px 0;
-  }
-  .split-label { font-size: 13px; color: var(--text2); }
-
-  /* Rounding */
-  .round-row {
-    display: flex;
-    gap: 6px;
-  }
-  .round-btn {
-    flex: 1;
-    padding: 9px;
-    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s;
+  }
+  .add-btn:hover { background: var(--accent2); }
+
+  /* Category quick picks */
+  .quick-picks { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .quick-btn {
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
     background: transparent;
     color: var(--text2);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.12s;
+    transition: all 0.1s;
   }
-  .round-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .round-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  .quick-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
 
-  /* Results */
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .result-cell {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 14px 12px;
-    transition: background 0.25s;
-  }
-  .result-cell.featured {
-    background: var(--accent-light);
-    border: 1px solid var(--accent);
-  }
-  .result-cell-label {
-    font-size: 11px;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 5px;
-  }
-  .result-cell.featured .result-cell-label { color: var(--accent); opacity: 0.8; }
-  .result-cell-value {
-    font-family: 'DM Mono', monospace;
-    font-size: 21px;
-    font-weight: 500;
-    color: var(--text);
-    letter-spacing: -0.5px;
-  }
-  .result-cell.featured .result-cell-value { color: var(--accent-dark); }
-  [data-theme="dark"] .result-cell.featured .result-cell-value { color: var(--accent); }
-
-  /* Breakdown table */
-  .breakdown { margin-top: 12px; }
-  .breakdown-title {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 10px;
-  }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  tr { border-bottom: 1px solid var(--border); }
-  tr:last-child { border-bottom: none; }
-  td { padding: 8px 0; color: var(--text2); }
-  td:last-child { text-align: right; font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); font-size: 13px; }
-  .tfoot-row td { font-weight: 600; color: var(--text); font-size: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
-  .tfoot-row td:last-child { color: var(--accent); }
-
-  .reset-btn {
-    width: 100%;
-    padding: 11px;
-    background: transparent;
+  /* Subscription list */
+  .list-card {
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text3);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .reset-btn:hover { color: var(--text2); border-color: var(--text3); background: var(--surface2); }
-
-  .pay-section { margin-top: 16px; }
-  .pay-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 10px;
-  }
-  .pay-btns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .pay-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 8px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.12s;
-  }
-  .pay-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .pay-btn-venmo { background: #008CFF; color: #fff; border-color: #008CFF; }
-  .pay-btn-venmo:hover { background: #0070cc; border-color: #0070cc; }
-  .pay-btn-cash { background: #00D64F; color: #fff; border-color: #00D64F; }
-  .pay-btn-cash:hover { background: #00b040; border-color: #00b040; }
-  .pay-btn-splitwise { background: #FF6B35; color: #fff; border-color: #FF6B35; }
-  .pay-btn-splitwise:hover { background: #e55a25; border-color: #e55a25; }
-
-  .restaurant-section { margin-top: 16px; }
-  .pay-btn-resy { background: #E8003D; color: #fff; border-color: #E8003D; }
-  .pay-btn-resy:hover { background: #c00030; border-color: #c00030; }
-  .pay-btn-opentable { background: #DA3743; color: #fff; border-color: #DA3743; }
-  .pay-btn-opentable:hover { background: #b82c36; border-color: #b82c36; }
-
-  .ad-slot {
-    width: 100%;
-    max-width: 520px;
-    margin: 8px 0;
-    min-height: 90px;
-    background: var(--surface2);
     border-radius: var(--radius);
     overflow: hidden;
+  }
+  .list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .list-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
+  .list-sort {
+    display: flex;
+    gap: 4px;
+  }
+  .sort-btn {
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text3);
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+  .sort-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+
+  .sub-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 1.25rem;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    transition: background 0.1s;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .sub-item:last-child { border-bottom: none; }
+  .sub-item:hover { background: var(--surface2); }
+  .sub-emoji {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--surface3);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
   }
-
-  footer {
-    margin-top: 2.5rem;
-    font-size: 12px;
+  .sub-info { flex: 1; min-width: 0; }
+  .sub-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .sub-renewal { font-size: 11px; margin-top: 2px; }
+  .sub-renewal.soon { color: var(--yellow); }
+  .sub-renewal.overdue { color: var(--red); }
+  .sub-renewal.ok { color: var(--text3); }
+  .sub-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .sub-price-mo { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .sub-delete {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: transparent;
     color: var(--text3);
-    letter-spacing: 0.04em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.1s;
+    flex-shrink: 0;
   }
+  .sub-delete:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
 
-  @media (max-width: 400px) {
-    #bill { font-size: 36px; }
-    .results-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .result-cell-value { font-size: 17px; }
+  .empty-state {
+    padding: 3rem 1.25rem;
+    text-align: center;
+    color: var(--text3);
+    font-size: 13px;
+    line-height: 1.7;
   }
+  .empty-icon { font-size: 32px; margin-bottom: 10px; }
+
+  /* Breakdown */
+  .breakdown-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+  .breakdown-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; }
+  .breakdown-bar { margin-bottom: 10px; }
+  .breakdown-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+  .breakdown-bar-label span:first-child { color: var(--text2); }
+  .breakdown-bar-label span:last-child { font-family: 'DM Mono', monospace; color: var(--text); }
+  .bar-track { height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+
+  /* Reminder notice */
+  .reminder-card {
+    background: var(--yellow-bg);
+    border: 1px solid rgba(255,217,61,0.2);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: none;
+  }
+  .reminder-title { font-size: 12px; font-weight: 600; color: var(--yellow); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .reminder-item { font-size: 13px; color: var(--text2); padding: 3px 0; }
+
+  footer { margin-top: 2.5rem; font-size: 11px; color: var(--text3); letter-spacing: 0.06em; }
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo">
-    <span class="logo-mark">TIP/</span>
-    <span class="logo-sub">Calculator</span>
+    <span class="logo-mark">SUB/</span>
+    <span class="logo-sub">Tracker</span>
   </div>
-  <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode"></button>
+  <span style="font-size:11px;color:var(--text3);" id="subCount">0 subscriptions</span>
 </header>
 
 <div class="container">
 
-  <!-- Bill -->
-  <div class="card">
-    <div class="card-label">Bill amount</div>
-    <div class="bill-row">
-      <span class="bill-symbol">$</span>
-      <input type="number" id="bill" placeholder="0.00" min="0" step="0.01" inputmode="decimal" autocomplete="off" />
+  <!-- Summary -->
+  <div class="summary-grid">
+    <div class="summary-card featured">
+      <div class="summary-label">Monthly</div>
+      <div class="summary-value" id="totalMonthly">$0</div>
+      <div class="summary-sub">per month</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Yearly</div>
+      <div class="summary-value" id="totalYearly">$0</div>
+      <div class="summary-sub">per year</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Daily</div>
+      <div class="summary-value" id="totalDaily">$0</div>
+      <div class="summary-sub">per day</div>
     </div>
   </div>
 
-  <!-- Tip -->
-  <div class="card">
-    <div class="card-label">Tip percentage</div>
-    <div class="tip-grid">
-      <button class="tip-btn" data-tip="10">10%</button>
-      <button class="tip-btn" data-tip="15">15%</button>
-      <button class="tip-btn active" data-tip="18">18%</button>
-      <button class="tip-btn" data-tip="20">20%</button>
-      <button class="tip-btn" data-tip="25">25%</button>
+  <!-- Upcoming renewals -->
+  <div class="reminder-card" id="reminderCard">
+    <div class="reminder-title">Upcoming renewals</div>
+    <div id="reminderList"></div>
+  </div>
+
+  <!-- Add subscription -->
+  <div class="add-card">
+    <div class="add-card-title">Add subscription</div>
+    <div class="quick-picks" id="quickPicks">
+      <button class="quick-btn" data-name="Netflix" data-emoji="📺" data-price="15.49">Netflix</button>
+      <button class="quick-btn" data-name="Spotify" data-emoji="🎵" data-price="10.99">Spotify</button>
+      <button class="quick-btn" data-name="Hulu" data-emoji="📱" data-price="7.99">Hulu</button>
+      <button class="quick-btn" data-name="Disney+" data-emoji="🏰" data-price="13.99">Disney+</button>
+      <button class="quick-btn" data-name="Apple TV+" data-emoji="🍎" data-price="9.99">Apple TV+</button>
+      <button class="quick-btn" data-name="Amazon Prime" data-emoji="📦" data-price="14.99">Amazon Prime</button>
+      <button class="quick-btn" data-name="YouTube Premium" data-emoji="▶️" data-price="13.99">YouTube</button>
+      <button class="quick-btn" data-name="HBO Max" data-emoji="🎬" data-price="15.99">HBO Max</button>
+      <button class="quick-btn" data-name="iCloud" data-emoji="☁️" data-price="2.99">iCloud</button>
+      <button class="quick-btn" data-name="ChatGPT Plus" data-emoji="🤖" data-price="20.00">ChatGPT</button>
     </div>
-    <div class="custom-row">
-      <label for="customTip">Custom</label>
-      <input type="number" id="customTip" placeholder="e.g. 22" min="0" max="100" step="1" />
-      <span>%</span>
+    <div class="form-row">
+      <div class="input-wrap">
+        <input type="text" id="subName" placeholder="Subscription name" maxlength="30" />
+      </div>
+      <div class="input-wrap" style="width:110px;">
+        <span class="input-prefix">$</span>
+        <input type="number" id="subPrice" placeholder="0.00" min="0" step="0.01" style="width:70px;" />
+      </div>
+      <button class="add-btn" id="addBtn">Add</button>
+    </div>
+    <div class="form-row-2">
+      <div class="input-wrap">
+        <select id="subCycle">
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+          <option value="weekly">Weekly</option>
+        </select>
+      </div>
+      <div class="input-wrap">
+        <input type="date" id="subRenewal" />
+      </div>
     </div>
   </div>
 
-  <!-- Split -->
-  <div class="card">
-    <div class="card-label">Split between</div>
-    <div class="split-row">
-      <div class="split-ctrl">
-        <button id="splitDown" aria-label="Decrease">−</button>
-        <div class="split-num" id="splitNum">1</div>
-        <button id="splitUp" aria-label="Increase">+</button>
+  <!-- List -->
+  <div class="list-card">
+    <div class="list-header">
+      <span class="list-title">Your subscriptions</span>
+      <div class="list-sort">
+        <button class="sort-btn active" data-sort="date">Recent</button>
+        <button class="sort-btn" data-sort="price">Price</button>
+        <button class="sort-btn" data-sort="name">Name</button>
       </div>
-      <span class="split-label" id="splitLabel">person</span>
+    </div>
+    <div id="subList">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        Add your first subscription above<br>to start tracking your spending
+      </div>
     </div>
   </div>
 
-  <!-- Rounding -->
-  <div class="card">
-    <div class="card-label">Round up per person to nearest</div>
-    <div class="round-row">
-      <button class="round-btn active" data-round="0">No rounding</button>
-      <button class="round-btn" data-round="0.5">$0.50</button>
-      <button class="round-btn" data-round="1">$1.00</button>
-    </div>
-  </div>
-
-  <!-- Results -->
-  <div class="card">
-    <div class="results-grid">
-      <div class="result-cell">
-        <div class="result-cell-label">Tip</div>
-        <div class="result-cell-value" id="tipAmt">$0.00</div>
-      </div>
-      <div class="result-cell">
-        <div class="result-cell-label">Total</div>
-        <div class="result-cell-value" id="totalAmt">$0.00</div>
-      </div>
-      <div class="result-cell featured">
-        <div class="result-cell-label">Per person</div>
-        <div class="result-cell-value" id="perPerson">$0.00</div>
-      </div>
-    </div>
-
-    <div class="breakdown">
-      <div class="breakdown-title">Breakdown</div>
-      <table>
-        <tbody>
-          <tr><td>Bill subtotal</td><td id="br-bill">$0.00</td></tr>
-          <tr><td>Tip (<span id="br-pct">18</span>%)</td><td id="br-tip">$0.00</td></tr>
-          <tr id="splitRow" style="display:none"><td>Split (<span id="br-split">1</span> people)</td><td id="br-split-val">÷ 1</td></tr>
-          <tr id="roundRow" style="display:none"><td>Rounding added</td><td id="br-round">$0.00</td></tr>
-        </tbody>
-        <tfoot>
-          <tr class="tfoot-row"><td>Each person pays</td><td id="br-total">$0.00</td></tr>
-        </tfoot>
-      </table>
-    </div>
-
-    <div style="margin-top:12px;">
-      <button class="reset-btn" id="resetBtn">Reset</button>
-
-      <!-- Pay with section -->
-      <div class="pay-section">
-        <div class="pay-label">Pay with</div>
-        <div class="pay-btns">
-          <a class="pay-btn pay-btn-venmo" href="https://venmo.com" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 2.25C20.7 4.05 21.25 5.9 21.25 8.2c0 5.55-4.75 12.75-8.6 17.8H4.1L.75 2.9l7.5-.7 1.8 14.4C11.7 13.9 13.85 9.1 13.85 5.7c0-1.85-.3-3.1-.8-4.15z"/></svg>
-            Venmo
-          </a>
-          <a class="pay-btn pay-btn-cash" href="https://cash.app" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm1.5 17.5h-3v-1.25c-1.75-.25-3-1.25-3.25-2.75h2c.25.75.75 1.25 1.75 1.25.75 0 1.5-.5 1.5-1.25 0-.75-.5-1-1.75-1.25-2-.5-3.25-1.25-3.25-3 0-1.5 1.25-2.5 3-2.75V5h3v1.25c1.5.25 2.75 1.25 3 2.75h-2c-.25-.75-.75-1-1.5-1-.75 0-1.25.5-1.25 1 0 .75.75 1 2 1.25 2 .5 3 1.25 3 3 0 1.5-1.25 2.75-3.25 3V17.5z"/></svg>
-            Cash App
-          </a>
-          <a class="pay-btn pay-btn-splitwise" href="https://splitwise.com" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-            Splitwise
-          </a>
-        </div>
-      </div>
-
-      <!-- Book a table section -->
-      <div class="restaurant-section">
-        <div class="pay-label">Book your next table</div>
-        <div class="pay-btns">
-          <a class="pay-btn pay-btn-resy" href="https://resy.com" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            Resy
-          </a>
-          <a class="pay-btn pay-btn-opentable" href="https://www.opentable.com" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-            OpenTable
-          </a>
-          <a class="pay-btn" href="https://www.opentable.com" target="_blank" rel="noopener" style="border-color:var(--border);color:var(--text2);">
-            Find a table →
-          </a>
-        </div>
-      </div>
-    </div>
+  <!-- Breakdown -->
+  <div class="breakdown-card" id="breakdownCard" style="display:none;">
+    <div class="breakdown-title">Spending breakdown</div>
+    <div id="breakdownBars"></div>
   </div>
 
 </div>
 
-<!-- AdSense ad unit -->
-<div class="ad-slot">
-  <ins class="adsbygoogle"
-    style="display:block;width:100%;min-height:90px;"
-    data-ad-client="ca-pub-5568504521933562"
-    data-ad-slot="auto"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-</div>
-
-<footer>Made with care &mdash; splittip.app</footer>
+<footer>SubTrack — know what you're paying</footer>
 
 <script>
-  let tipPct = 18;
-  let splitCount = 1;
-  let roundTo = 0;
+  const EMOJIS = {
+    default: '💳',
+    stream: '📺',
+    music: '🎵',
+    cloud: '☁️',
+    news: '📰',
+    fitness: '💪',
+    gaming: '🎮',
+    software: '💻',
+    food: '🍔',
+    other: '📦'
+  };
 
-  const billEl = document.getElementById('bill');
-  const customTipEl = document.getElementById('customTip');
-  const splitNumEl = document.getElementById('splitNum');
-  const splitLabelEl = document.getElementById('splitLabel');
+  const BAR_COLORS = ['#7c6fff','#4ecdc4','#ffd93d','#ff6b6b','#a594ff','#6bcfff','#ff9f43','#55efc4'];
+
+  let subs = JSON.parse(localStorage.getItem('subtrack-subs') || '[]');
+  let sortMode = 'date';
+
+  function save() {
+    localStorage.setItem('subtrack-subs', JSON.stringify(subs));
+  }
+
+  function toMonthly(price, cycle) {
+    if (cycle === 'yearly') return price / 12;
+    if (cycle === 'weekly') return price * 4.33;
+    return price;
+  }
 
   function fmt(n) { return '$' + n.toFixed(2); }
-
-  function roundUp(value, nearest) {
-    if (!nearest) return value;
-    return Math.ceil(value / nearest) * nearest;
+  function fmtShort(n) {
+    if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'k';
+    return '$' + Math.round(n);
   }
 
-  function calc() {
-    const bill = parseFloat(billEl.value) || 0;
-    const tip = bill * (tipPct / 100);
-    const total = bill + tip;
-    const raw = total / splitCount;
-    const rounded = roundUp(raw, roundTo);
-    const roundingAdded = rounded - raw;
+  function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(dateStr); d.setHours(0,0,0,0);
+    return Math.round((d - today) / 86400000);
+  }
 
-    document.getElementById('tipAmt').textContent = fmt(tip);
-    document.getElementById('totalAmt').textContent = fmt(total);
-    document.getElementById('perPerson').textContent = fmt(rounded);
+  function renewalLabel(dateStr) {
+    const days = daysUntil(dateStr);
+    if (days === null) return { text: '', cls: 'ok' };
+    if (days < 0) return { text: `Renewed ${Math.abs(days)}d ago`, cls: 'ok' };
+    if (days === 0) return { text: 'Renews today!', cls: 'overdue' };
+    if (days <= 3) return { text: `Renews in ${days}d`, cls: 'overdue' };
+    if (days <= 7) return { text: `Renews in ${days}d`, cls: 'soon' };
+    const d = new Date(dateStr);
+    return { text: `Renews ${d.toLocaleDateString('en-US', {month:'short', day:'numeric'})}`, cls: 'ok' };
+  }
 
-    document.getElementById('br-bill').textContent = fmt(bill);
-    document.getElementById('br-pct').textContent = tipPct;
-    document.getElementById('br-tip').textContent = fmt(tip);
-    document.getElementById('br-total').textContent = fmt(rounded);
+  function getEmoji(sub) {
+    return sub.emoji || EMOJIS.default;
+  }
 
-    const splitRow = document.getElementById('splitRow');
-    if (splitCount > 1) {
-      splitRow.style.display = '';
-      document.getElementById('br-split').textContent = splitCount;
-      document.getElementById('br-split-val').textContent = '÷ ' + splitCount;
+  function render() {
+    const monthly = subs.reduce((s, x) => s + toMonthly(x.price, x.cycle), 0);
+    const yearly = monthly * 12;
+    const daily = monthly / 30.4;
+
+    document.getElementById('totalMonthly').textContent = fmtShort(monthly);
+    document.getElementById('totalYearly').textContent = fmtShort(yearly);
+    document.getElementById('totalDaily').textContent = '$' + daily.toFixed(2);
+    document.getElementById('subCount').textContent = subs.length + ' subscription' + (subs.length !== 1 ? 's' : '');
+
+    // Reminders
+    const soon = subs.filter(s => { const d = daysUntil(s.renewal); return d !== null && d >= 0 && d <= 7; });
+    const reminderCard = document.getElementById('reminderCard');
+    if (soon.length > 0) {
+      reminderCard.style.display = '';
+      document.getElementById('reminderList').innerHTML = soon.map(s => {
+        const d = daysUntil(s.renewal);
+        return `<div class="reminder-item">${getEmoji(s)} ${s.name} — ${d === 0 ? 'today' : 'in ' + d + ' day' + (d !== 1 ? 's' : '')} (${fmt(s.price)})</div>`;
+      }).join('');
     } else {
-      splitRow.style.display = 'none';
+      reminderCard.style.display = 'none';
     }
 
-    const roundRow = document.getElementById('roundRow');
-    if (roundTo > 0 && roundingAdded > 0.001) {
-      roundRow.style.display = '';
-      document.getElementById('br-round').textContent = '+' + fmt(roundingAdded);
+    // Sort
+    let sorted = [...subs];
+    if (sortMode === 'price') sorted.sort((a,b) => toMonthly(b.price, b.cycle) - toMonthly(a.price, a.cycle));
+    else if (sortMode === 'name') sorted.sort((a,b) => a.name.localeCompare(b.name));
+    else sorted.reverse();
+
+    // List
+    const listEl = document.getElementById('subList');
+    if (subs.length === 0) {
+      listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div>Add your first subscription above<br>to start tracking your spending</div>`;
     } else {
-      roundRow.style.display = 'none';
+      listEl.innerHTML = sorted.map(sub => {
+        const mo = toMonthly(sub.price, sub.cycle);
+        const rl = renewalLabel(sub.renewal);
+        const cycleLabel = sub.cycle === 'yearly' ? '/yr' : sub.cycle === 'weekly' ? '/wk' : '/mo';
+        return `<div class="sub-item">
+          <div class="sub-emoji">${getEmoji(sub)}</div>
+          <div class="sub-info">
+            <div class="sub-name">${sub.name}</div>
+            <div class="sub-meta">${sub.cycle.charAt(0).toUpperCase() + sub.cycle.slice(1)}</div>
+            ${rl.text ? `<div class="sub-renewal ${rl.cls}">${rl.text}</div>` : ''}
+          </div>
+          <div>
+            <div class="sub-price">${fmt(sub.price)}${cycleLabel}</div>
+            ${sub.cycle !== 'monthly' ? `<div class="sub-price-mo">${fmt(mo)}/mo</div>` : ''}
+          </div>
+          <button class="sub-delete" onclick="deleteSub('${sub.id}')">×</button>
+        </div>`;
+      }).join('');
+    }
+
+    // Breakdown
+    const breakdownCard = document.getElementById('breakdownCard');
+    if (subs.length > 1) {
+      breakdownCard.style.display = '';
+      const top = [...subs].sort((a,b) => toMonthly(b.price,b.cycle) - toMonthly(a.price,a.cycle)).slice(0, 6);
+      document.getElementById('breakdownBars').innerHTML = top.map((sub, i) => {
+        const mo = toMonthly(sub.price, sub.cycle);
+        const pct = monthly > 0 ? (mo / monthly * 100) : 0;
+        return `<div class="breakdown-bar">
+          <div class="breakdown-bar-label">
+            <span>${getEmoji(sub)} ${sub.name}</span>
+            <span>${fmt(mo)}/mo</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${pct.toFixed(1)}%;background:${BAR_COLORS[i % BAR_COLORS.length]};"></div>
+          </div>
+        </div>`;
+      }).join('');
+    } else {
+      breakdownCard.style.display = 'none';
     }
   }
 
-  document.querySelectorAll('.tip-btn').forEach(btn => {
+  function addSub(name, price, cycle, renewal, emoji) {
+    if (!name || !price || price <= 0) return;
+    subs.push({
+      id: Date.now().toString(),
+      name,
+      price: parseFloat(price),
+      cycle: cycle || 'monthly',
+      renewal: renewal || '',
+      emoji: emoji || EMOJIS.default,
+      added: Date.now()
+    });
+    save();
+    render();
+  }
+
+  window.deleteSub = function(id) {
+    subs = subs.filter(s => s.id !== id);
+    save();
+    render();
+  };
+
+  document.getElementById('addBtn').addEventListener('click', () => {
+    const name = document.getElementById('subName').value.trim();
+    const price = document.getElementById('subPrice').value;
+    const cycle = document.getElementById('subCycle').value;
+    const renewal = document.getElementById('subRenewal').value;
+    if (!name || !price) return;
+    addSub(name, price, cycle, renewal, EMOJIS.default);
+    document.getElementById('subName').value = '';
+    document.getElementById('subPrice').value = '';
+    document.getElementById('subRenewal').value = '';
+  });
+
+  document.getElementById('subName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('addBtn').click();
+  });
+
+  document.querySelectorAll('.quick-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      tipPct = parseInt(btn.dataset.tip);
-      customTipEl.value = '';
-      document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      calc();
+      const name = btn.dataset.name;
+      const price = btn.dataset.price;
+      const emoji = btn.dataset.emoji;
+      addSub(name, price, 'monthly', '', emoji);
     });
   });
 
-  customTipEl.addEventListener('input', () => {
-    const v = parseFloat(customTipEl.value);
-    if (!isNaN(v) && v >= 0) {
-      tipPct = v;
-      document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
-    }
-    calc();
-  });
-
-  billEl.addEventListener('input', calc);
-
-  document.getElementById('splitUp').addEventListener('click', () => {
-    splitCount = Math.min(splitCount + 1, 30);
-    splitNumEl.textContent = splitCount;
-    splitLabelEl.textContent = splitCount === 1 ? 'person' : 'people';
-    document.getElementById('splitDown').disabled = splitCount <= 1;
-    calc();
-  });
-
-  document.getElementById('splitDown').addEventListener('click', () => {
-    splitCount = Math.max(splitCount - 1, 1);
-    splitNumEl.textContent = splitCount;
-    splitLabelEl.textContent = splitCount === 1 ? 'person' : 'people';
-    document.getElementById('splitDown').disabled = splitCount <= 1;
-    calc();
-  });
-  document.getElementById('splitDown').disabled = true;
-
-  document.querySelectorAll('.round-btn').forEach(btn => {
+  document.querySelectorAll('.sort-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      roundTo = parseFloat(btn.dataset.round);
-      document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('active'));
+      sortMode = btn.dataset.sort;
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      calc();
+      render();
     });
   });
 
-  document.getElementById('resetBtn').addEventListener('click', () => {
-    billEl.value = '';
-    customTipEl.value = '';
-    tipPct = 18;
-    splitCount = 1;
-    roundTo = 0;
-    splitNumEl.textContent = '1';
-    splitLabelEl.textContent = 'person';
-    document.getElementById('splitDown').disabled = true;
-    document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('[data-tip="18"]').classList.add('active');
-    document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('[data-round="0"]').classList.add('active');
-    calc();
-  });
+  // Set default renewal date to 1 month from now
+  const d = new Date(); d.setMonth(d.getMonth() + 1);
+  document.getElementById('subRenewal').value = d.toISOString().split('T')[0];
 
-  document.getElementById('themeBtn').addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  });
-
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }
-
-  calc();
+  render();
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
