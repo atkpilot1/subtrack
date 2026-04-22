@@ -1,39 +1,405 @@
-📸
-SubSnap
-0 subs
-MONTHLY
-$0
-per month
-YEARLY
-$0
-per year
-DAILY
-$0.00
-per day
-ADD SUBSCRIPTION
-📺 Netflix
-🎵 Spotify
-💚 Hulu
-🏰 Disney+
-🍎 Apple TV+
-📦 Prime
-▶️ YouTube
-🎬 HBO Max
-☁️ iCloud
-🤖 ChatGPT
-
-$
-
-+ Add
-          Monthly
-          Yearly
-          Weekly
-        
-YOUR SUBSCRIPTIONS
-Recent
-Price
-Name
-🎯
-Add your first subscription above
-to start tracking your spending!
-SubSnap — know exactly what you're paying
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SubSnap — Subscription Tracker</title>
+<meta name="description" content="Track all your subscriptions, see your monthly and yearly costs, and never get surprised by a bill again." />
+<meta name="theme-color" content="#ff6b6b" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="SubSnap" />
+<meta name="mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f9fc;
+    --surface: #ffffff;
+    --surface2: #f0f4f8;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --text2: #4a5568;
+    --text3: #a0aec0;
+    --red: #ff6b6b;
+    --orange: #ff9f43;
+    --yellow: #ffd93d;
+    --green: #6bcb77;
+    --blue: #4d96ff;
+    --purple: #c77dff;
+    --pink: #ff6eb4;
+    --teal: #4ecdc4;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1rem 5rem;
+  }
+  header {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--red), var(--orange));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+  }
+  .logo-text { font-size: 20px; font-weight: 800; color: var(--text); }
+  .logo-text span { color: var(--red); }
+  .sub-count-badge {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    box-shadow: var(--shadow);
+  }
+  .container { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 14px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+  .summary-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .summary-card.monthly::before { background: linear-gradient(90deg, var(--red), var(--orange)); }
+  .summary-card.yearly::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+  .summary-card.daily::before { background: linear-gradient(90deg, var(--green), var(--teal)); }
+  .summary-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; margin-top: 2px; }
+  .summary-value { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; color: var(--text); }
+  .summary-sub { font-size: 11px; color: var(--text3); margin-top: 3px; font-weight: 700; }
+  .reminder-card { background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: var(--radius); padding: 1rem 1.25rem; display: none; }
+  .reminder-title { font-size: 12px; font-weight: 800; color: #d97706; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .reminder-item { font-size: 13px; color: #92400e; padding: 3px 0; font-weight: 600; }
+  .add-card { background: var(--surface); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); }
+  .add-card-title { font-size: 13px; font-weight: 800; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .quick-picks { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .quick-btn {
+    padding: 6px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface2);
+    color: var(--text2);
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .quick-btn:hover { border-color: var(--red); color: var(--red); background: #fff5f5; transform: translateY(-1px); }
+  .form-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .input-wrap {
+    display: flex; align-items: center;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input-wrap:focus-within { border-color: var(--red); box-shadow: 0 0 0 3px rgba(255,107,107,0.12); }
+  .input-wrap input, .input-wrap select {
+    background: transparent; border: none; outline: none;
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--text); padding: 10px 0; width: 100%; min-width: 0;
+  }
+  .input-wrap input::placeholder { color: var(--text3); font-weight: 600; }
+  .input-wrap select option { background: white; }
+  .input-prefix { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--text3); margin-right: 4px; }
+  .add-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--red), var(--orange));
+    color: #fff; border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800;
+    cursor: pointer; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(255,107,107,0.35);
+    transition: all 0.12s;
+  }
+  .add-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,107,0.45); }
+  .list-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .list-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+  .list-title { font-size: 13px; font-weight: 800; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
+  .list-sort { display: flex; gap: 4px; }
+  .sort-btn {
+    padding: 4px 10px; border: 1.5px solid var(--border); border-radius: 20px;
+    background: transparent; color: var(--text3);
+    font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+    cursor: pointer; transition: all 0.1s;
+  }
+  .sort-btn.active { border-color: var(--red); color: var(--red); background: #fff5f5; }
+  .sub-item {
+    display: flex; align-items: center;
+    padding: 14px 1.25rem; border-bottom: 1px solid var(--border);
+    gap: 12px; transition: background 0.1s;
+    animation: slideIn 0.2s ease;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+  .sub-item:last-child { border-bottom: none; }
+  .sub-item:hover { background: var(--surface2); }
+  .sub-emoji { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .sub-info { flex: 1; min-width: 0; }
+  .sub-name { font-size: 15px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub-meta { font-size: 11px; color: var(--text3); margin-top: 2px; font-weight: 600; }
+  .sub-renewal { font-size: 11px; margin-top: 2px; font-weight: 700; }
+  .sub-renewal.soon { color: var(--orange); }
+  .sub-renewal.overdue { color: var(--red); }
+  .sub-renewal.ok { color: var(--text3); }
+  .sub-price { text-align: right; flex-shrink: 0; }
+  .sub-price-main { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--text); }
+  .sub-price-mo { font-size: 10px; color: var(--text3); margin-top: 2px; font-weight: 700; }
+  .sub-delete {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1.5px solid var(--border); background: transparent;
+    color: var(--text3); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.1s; flex-shrink: 0;
+  }
+  .sub-delete:hover { border-color: var(--red); color: var(--red); background: #fff5f5; }
+  .empty-state { padding: 3rem 1.25rem; text-align: center; color: var(--text3); font-size: 14px; font-weight: 600; line-height: 1.7; }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .breakdown-card { background: var(--surface); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); }
+  .breakdown-title { font-size: 13px; font-weight: 800; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .breakdown-bar { margin-bottom: 12px; }
+  .breakdown-bar-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .breakdown-bar-label span:first-child { color: var(--text2); }
+  .breakdown-bar-label span:last-child { font-family: 'DM Mono', monospace; color: var(--text); font-size: 12px; }
+  .bar-track { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  footer { margin-top: 2.5rem; font-size: 12px; color: var(--text3); font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="logo-icon">📸</div>
+    <div class="logo-text">Sub<span>Snap</span></div>
+  </div>
+  <div class="sub-count-badge" id="subCount">0 subs</div>
+</header>
+<div class="container">
+  <div class="summary-grid">
+    <div class="summary-card monthly">
+      <div class="summary-label">Monthly</div>
+      <div class="summary-value" id="totalMonthly">$0</div>
+      <div class="summary-sub">per month</div>
+    </div>
+    <div class="summary-card yearly">
+      <div class="summary-label">Yearly</div>
+      <div class="summary-value" id="totalYearly">$0</div>
+      <div class="summary-sub">per year</div>
+    </div>
+    <div class="summary-card daily">
+      <div class="summary-label">Daily</div>
+      <div class="summary-value" id="totalDaily">$0.00</div>
+      <div class="summary-sub">per day</div>
+    </div>
+  </div>
+  <div class="reminder-card" id="reminderCard">
+    <div class="reminder-title">⏰ Upcoming renewals</div>
+    <div id="reminderList"></div>
+  </div>
+  <div class="add-card">
+    <div class="add-card-title">Add subscription</div>
+    <div class="quick-picks">
+      <button class="quick-btn" data-name="Netflix" data-emoji="📺" data-price="15.49">📺 Netflix</button>
+      <button class="quick-btn" data-name="Spotify" data-emoji="🎵" data-price="10.99">🎵 Spotify</button>
+      <button class="quick-btn" data-name="Hulu" data-emoji="💚" data-price="7.99">💚 Hulu</button>
+      <button class="quick-btn" data-name="Disney+" data-emoji="🏰" data-price="13.99">🏰 Disney+</button>
+      <button class="quick-btn" data-name="Apple TV+" data-emoji="🍎" data-price="9.99">🍎 Apple TV+</button>
+      <button class="quick-btn" data-name="Amazon Prime" data-emoji="📦" data-price="14.99">📦 Prime</button>
+      <button class="quick-btn" data-name="YouTube Premium" data-emoji="▶️" data-price="13.99">▶️ YouTube</button>
+      <button class="quick-btn" data-name="HBO Max" data-emoji="🎬" data-price="15.99">🎬 HBO Max</button>
+      <button class="quick-btn" data-name="iCloud" data-emoji="☁️" data-price="2.99">☁️ iCloud</button>
+      <button class="quick-btn" data-name="ChatGPT Plus" data-emoji="🤖" data-price="20.00">🤖 ChatGPT</button>
+    </div>
+    <div class="form-row">
+      <div class="input-wrap">
+        <input type="text" id="subName" placeholder="Subscription name" maxlength="30" />
+      </div>
+      <div class="input-wrap" style="width:110px;">
+        <span class="input-prefix">$</span>
+        <input type="number" id="subPrice" placeholder="0.00" min="0" step="0.01" style="width:70px;" />
+      </div>
+      <button class="add-btn" id="addBtn">+ Add</button>
+    </div>
+    <div class="form-row-2">
+      <div class="input-wrap">
+        <select id="subCycle">
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+          <option value="weekly">Weekly</option>
+        </select>
+      </div>
+      <div class="input-wrap">
+        <input type="date" id="subRenewal" />
+      </div>
+    </div>
+  </div>
+  <div class="list-card">
+    <div class="list-header">
+      <span class="list-title">Your subscriptions</span>
+      <div class="list-sort">
+        <button class="sort-btn active" data-sort="date">Recent</button>
+        <button class="sort-btn" data-sort="price">Price</button>
+        <button class="sort-btn" data-sort="name">Name</button>
+      </div>
+    </div>
+    <div id="subList">
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        Add your first subscription above<br>to start tracking your spending!
+      </div>
+    </div>
+  </div>
+  <div class="breakdown-card" id="breakdownCard" style="display:none;">
+    <div class="breakdown-title">💸 Spending breakdown</div>
+    <div id="breakdownBars"></div>
+  </div>
+</div>
+<footer>SubSnap — know exactly what you're paying</footer>
+<script>
+  const BAR_COLORS = ['#ff6b6b','#4d96ff','#6bcb77','#ffd93d','#c77dff','#ff9f43','#4ecdc4','#ff6eb4'];
+  const BG_COLORS = ['#fff5f5','#eff6ff','#f0fdf4','#fefce8','#faf5ff','#fff7ed','#f0fdfa','#fdf2f8'];
+  let subs = JSON.parse(localStorage.getItem('subsnap-subs') || '[]');
+  let sortMode = 'date';
+  function save() { localStorage.setItem('subsnap-subs', JSON.stringify(subs)); }
+  function toMonthly(price, cycle) {
+    if (cycle === 'yearly') return price / 12;
+    if (cycle === 'weekly') return price * 4.33;
+    return price;
+  }
+  function fmt(n) { return '$' + n.toFixed(2); }
+  function fmtShort(n) { return n >= 1000 ? '$' + (n/1000).toFixed(1) + 'k' : '$' + Math.round(n); }
+  function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(dateStr); d.setHours(0,0,0,0);
+    return Math.round((d - today) / 86400000);
+  }
+  function renewalLabel(dateStr) {
+    const days = daysUntil(dateStr);
+    if (days === null) return { text: '', cls: 'ok' };
+    if (days < 0) return { text: `Renewed ${Math.abs(days)}d ago`, cls: 'ok' };
+    if (days === 0) return { text: 'Renews today!', cls: 'overdue' };
+    if (days <= 3) return { text: `Renews in ${days}d ⚠️`, cls: 'overdue' };
+    if (days <= 7) return { text: `Renews in ${days}d`, cls: 'soon' };
+    const d = new Date(dateStr);
+    return { text: `Renews ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`, cls: 'ok' };
+  }
+  function render() {
+    const monthly = subs.reduce((s,x) => s + toMonthly(x.price, x.cycle), 0);
+    document.getElementById('totalMonthly').textContent = fmtShort(monthly);
+    document.getElementById('totalYearly').textContent = fmtShort(monthly * 12);
+    document.getElementById('totalDaily').textContent = fmt(monthly / 30.4);
+    document.getElementById('subCount').textContent = subs.length + ' sub' + (subs.length !== 1 ? 's' : '');
+    const soon = subs.filter(s => { const d = daysUntil(s.renewal); return d !== null && d >= 0 && d <= 7; });
+    const rc = document.getElementById('reminderCard');
+    if (soon.length > 0) {
+      rc.style.display = '';
+      document.getElementById('reminderList').innerHTML = soon.map(s => {
+        const d = daysUntil(s.renewal);
+        return `<div class="reminder-item">${s.emoji} ${s.name} — ${d===0?'today!':'in '+d+'d'} (${fmt(s.price)})</div>`;
+      }).join('');
+    } else { rc.style.display = 'none'; }
+    let sorted = [...subs];
+    if (sortMode==='price') sorted.sort((a,b)=>toMonthly(b.price,b.cycle)-toMonthly(a.price,a.cycle));
+    else if (sortMode==='name') sorted.sort((a,b)=>a.name.localeCompare(b.name));
+    else sorted.reverse();
+    const listEl = document.getElementById('subList');
+    if (!subs.length) {
+      listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div>Add your first subscription above<br>to start tracking your spending!</div>`;
+    } else {
+      listEl.innerHTML = sorted.map((sub,i) => {
+        const mo = toMonthly(sub.price, sub.cycle);
+        const rl = renewalLabel(sub.renewal);
+        const cl = sub.cycle==='yearly'?'/yr':sub.cycle==='weekly'?'/wk':'/mo';
+        const idx = subs.findIndex(s=>s.id===sub.id);
+        return `<div class="sub-item">
+          <div class="sub-emoji" style="background:${BG_COLORS[idx%BG_COLORS.length]}">${sub.emoji}</div>
+          <div class="sub-info">
+            <div class="sub-name">${sub.name}</div>
+            <div class="sub-meta">${sub.cycle.charAt(0).toUpperCase()+sub.cycle.slice(1)}</div>
+            ${rl.text?`<div class="sub-renewal ${rl.cls}">${rl.text}</div>`:''}
+          </div>
+          <div class="sub-price">
+            <div class="sub-price-main">${fmt(sub.price)}${cl}</div>
+            ${sub.cycle!=='monthly'?`<div class="sub-price-mo">${fmt(mo)}/mo</div>`:''}
+          </div>
+          <button class="sub-delete" onclick="deleteSub('${sub.id}')">×</button>
+        </div>`;
+      }).join('');
+    }
+    const bc = document.getElementById('breakdownCard');
+    if (subs.length > 1) {
+      bc.style.display = '';
+      const top = [...subs].sort((a,b)=>toMonthly(b.price,b.cycle)-toMonthly(a.price,a.cycle)).slice(0,6);
+      document.getElementById('breakdownBars').innerHTML = top.map((sub,i)=>{
+        const mo = toMonthly(sub.price,sub.cycle);
+        const pct = monthly>0?(mo/monthly*100):0;
+        return `<div class="breakdown-bar">
+          <div class="breakdown-bar-label"><span>${sub.emoji} ${sub.name}</span><span>${fmt(mo)}/mo</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct.toFixed(1)}%;background:${BAR_COLORS[i%BAR_COLORS.length]}"></div></div>
+        </div>`;
+      }).join('');
+    } else { bc.style.display='none'; }
+  }
+  function addSub(name,price,cycle,renewal,emoji) {
+    if (!name||!price||price<=0) return;
+    subs.push({id:Date.now().toString(),name,price:parseFloat(price),cycle:cycle||'monthly',renewal:renewal||'',emoji:emoji||'💳',added:Date.now()});
+    save(); render();
+  }
+  window.deleteSub = id => { subs=subs.filter(s=>s.id!==id); save(); render(); };
+  document.getElementById('addBtn').addEventListener('click',()=>{
+    const name=document.getElementById('subName').value.trim();
+    const price=document.getElementById('subPrice').value;
+    const cycle=document.getElementById('subCycle').value;
+    const renewal=document.getElementById('subRenewal').value;
+    if (!name||!price) return;
+    addSub(name,price,cycle,renewal,'💳');
+    document.getElementById('subName').value='';
+    document.getElementById('subPrice').value='';
+  });
+  document.getElementById('subName').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addBtn').click();});
+  document.querySelectorAll('.quick-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>addSub(btn.dataset.name,btn.dataset.price,'monthly','',btn.dataset.emoji));
+  });
+  document.querySelectorAll('.sort-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      sortMode=btn.dataset.sort;
+      document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active'); render();
+    });
+  });
+  const d=new Date(); d.setMonth(d.getMonth()+1);
+  document.getElementById('subRenewal').value=d.toISOString().split('T')[0];
+  render();
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+  }
+</script>
+</body>
+</html>
